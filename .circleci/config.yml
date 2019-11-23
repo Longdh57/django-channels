@@ -34,6 +34,11 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
 
+      - run:
+          name: copy env
+          command: |
+            cp .env.sample .env
+
       - save_cache:
           paths:
             - ./venv
