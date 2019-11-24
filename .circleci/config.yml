@@ -1,33 +1,51 @@
 version: 2
 jobs:
-  diana:
+  build:
     docker:
+      # specify the version you desire here
+      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.6.1
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/repo
 
     steps:
       - checkout
 
-      - run: echo "Install dependence"
-      - run: cp .env.sample .env
-      - run: python3 -m venv venv
-      - run: . venv/bin/activate
-      - run: pip install -r requirements.txt
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
-      - run: echo "Django test"
-      - run: . venv/bin/activate
-      - run: python manage.py test
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
 
-  kotex:
-    docker:
-      - image: circleci/python:3.6.1
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
 
-    steps:
-      - checkout
-      - run: echo "Hi Long, Hehe"
+      # run tests!
+      # this example uses Django's built-in test-runner
+      # other common Python testing frameworks include pytest and nose
+      # https://pytest.org
+      # https://nose.readthedocs.io
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            python manage.py test
 
-workflows:
-  version: 2
-  diana_kotex:
-    jobs:
-      - diana
-      - kotex
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
