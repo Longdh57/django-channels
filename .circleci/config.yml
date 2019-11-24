@@ -6,18 +6,16 @@ jobs:
 
     steps:
       - checkout
-      - run:
-        name: Install dependencies
-        command: |
-          cp .env.sample .env
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install -r requirements.txt
-      - run:
-        name: Django test
-        command: |
-          . venv/bin/activate
-          python manage.py test
+
+      - run: echo "Install dependence"
+      - run: cp .env.sample .env
+      - run: python3 -m venv venv
+      - run: . venv/bin/activate
+      - run: pip install -r requirements.txt
+
+      - run: echo "Django test"
+      - run: . venv/bin/activate
+      - run: python manage.py test
 
   kotex:
     docker:
