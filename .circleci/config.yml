@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  diana:
     docker:
       - image: circleci/python:3.6.1
 
@@ -8,10 +8,17 @@ jobs:
       - checkout
       - run: echo "Hello Long"
 
-  build:
+  kotex:
     docker:
       - image: circleci/python:3.6.1
 
     steps:
       - checkout
       - run: echo "Hi Long, Hehe"
+
+  workflows:
+    version: 2
+    diana_kotex:
+      jobs:
+        - diana
+        - kotex
