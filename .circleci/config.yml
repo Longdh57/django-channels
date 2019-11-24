@@ -16,9 +16,9 @@ jobs:
       - checkout
       - run: echo "Hi Long, Hehe"
 
-  workflows:
-    version: 2
-    diana_kotex:
-      jobs:
-        - diana
-        - kotex
+workflows:
+  version: 2
+  diana_kotex:
+    jobs:
+      - diana
+      - kotex
